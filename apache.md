@@ -45,10 +45,7 @@ https://www.softel.co.jp/labs/tools/basic-auth/
 
 #### フレームワーク系
 
-ブートストラップ(index.php)を必ず踏むフレームワークがの場合は
-ブートストラップを別名コピーして、認証させるurlをリダイレクト
-別名ブートストラップに対してベーシック認証をかける
-
+ブートストラップ(index.php)を必ず踏むフレームワークの場合はブートストラップを別名コピーして、認証させるurlを別名ブートストラップにリダイレクトしてベーシック認証をかける
 ```
 <IfModule mod_rewrite.c>
     RewriteEngine On
@@ -72,7 +69,7 @@ https://www.softel.co.jp/labs/tools/basic-auth/
 </Files>
 ```
 
-### 定義済変数などシンタックスのメモ
+### 定義済変数などシンタックスのメモ ###
 ---
 
 ```
