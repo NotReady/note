@@ -168,19 +168,19 @@ https://www.jetbrains.com/help/phpstorm/browser-debugging-extensions.html
 
 ```
 
-phpstorm設定例：
+### phpstorm設定例
 
-リモート先サーバー設定：
-> !{width: 500px}phpstorm-xdebug-server.png!
+リモート先サーバー設定
+![リモート先サーバー設定](./image/vagrant/phpstorm-xdebug-server.png)
 
 デバッグ設定
-> !{width: 500px}phpstorm-xdebug-debug.png!
+![デバッグ設定](./image/vagrant/phpstorm-xdebug-debug.png)
 
 実行/デバッグ構成
-> !{width: 500px}phpstorm-xdebug-rundebug.png!
+![実行/デバッグ構成](./image/vagrant/phpstorm-xdebug-rundebug.png)
 
 ブラウザでアタッチ
-> !{width: 500px}phpstorm-xdebug-rundebug.png!
+![ブラウザでアタッチ](./image/vagrant/chrom-extention.png)
 
 デバッグ開始
-> !{width: 500px}phpstorm-xdebug-rundebug.png!
+![デバッグ開始](./image/vagrant/phpstorm-xdebug-rundebug.png)
