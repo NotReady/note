@@ -1,0 +1,81 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  # Create VPC
+  VPC_New:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      Tags:
+      - Key: Name
+        Value: VPC_New
+  # Create Internet Gateway
+  IGW:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+      - Key: Name
+        Value: VPC_New-IGW
+  # Atacch Internet Gateway at VPC
+  AttachIGWtoVPC:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref VPC_New
+      InternetGatewayId: !Ref IGW
+  # Create Public RouteTable
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    DependsOn: AttachIGWtoVPC
+    Properties:
+      VpcId: !Ref VPC_New
+      Tags:
+      - Key: Name
+        Value: PublicRouteTable
+  # Regist Route to Public RouteTable
+  IGWRoute:
+    Type: AWS::EC2::Route
+    DependsOn: AttachIGWtoVPC
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref IGW
+  # Create Private RouteTable
+  PrivateRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId: !Ref VPC_New
+      Tags:
+      - Key: Name
+        Value: PrivateRouteTable
+  # Create Public Subnet
+  PublicSubnet:
+    Type: AWS::EC2::Subnet
+    DependsOn: AttachIGWtoVPC
+    Properties:
+      CidrBlock: 10.0.1.0/24
+      MapPublicIpOnLaunch: 'true'
+      VpcId: !Ref VPC_New
+      Tags:
+      - Key: Name
+        Value: PublicSubnet
+  # Associate RouteTable to Public Subnet
+  PublicSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId: !Ref PublicSubnet
+      RouteTableId: !Ref PublicRouteTable
+  # Create Private Subnet
+  PrivateSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.2.0/24
+      MapPublicOnLaunch: 'true'
+      VpcId: !Ref VPC_New
+      Tags:
+      - Key: Name
+        Value: PrivateSubnet
+  # Associate RouteTable to Private Subnet
+  PrivateSubnetRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Priperties:
+      SubnetId: !Ref PrivateSubnet
+      RouteTableId: !Ref PrivateRouteTable
