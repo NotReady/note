@@ -1,22 +1,26 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: 'cfn training'
-
+# Parametersはスタック作成時に指定する
 Parameters:
   KeyPair:
     Description: KeyPair Name
     Type: AWS::EC2::KeyPair::KeyName
-
+# テンプレート内からの指定はこちら
 Mappings:
   StackConfig:
     EC2:
       ImageId: 'ami-923d12f5'
-
+    IPAddress:
+      MS: '121.117.160.85/32'
+      VPC: '10.1.3.0/24'
+      SUBNET1: '10.1.3.0/25'
+      SUBNET2: '10.1.3.128/25'
 Resources:
   # Create VPC
   VPCTemplate:
     Type: AWS::EC2::VPC
     Properties:
-      CidrBlock: 10.1.3.0/24
+      CidrBlock: !FindInMap [ StackConfig, IPAddress, VPC ]
       Tags:
       - Key: Name
         Value: VPCTemplate
@@ -56,7 +60,7 @@ Resources:
     DependsOn: AttachIGWtoVPC
     Properties:
       AvailabilityZone: ap-northeast-1a
-      CidrBlock: 10.1.3.0/25
+      CidrBlock: !FindInMap [ StackConfig, IPAddress, SUBNET1 ]
       MapPublicIpOnLaunch: 'true'
       VpcId: !Ref VPCTemplate
       Tags:
@@ -67,7 +71,7 @@ Resources:
     Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: ap-northeast-1c
-      CidrBlock: 10.1.3.128/25
+      CidrBlock: !FindInMap [ StackConfig, IPAddress, SUBNET2 ]
       MapPublicIpOnLaunch: 'true'
       VpcId: !Ref VPCTemplate
       Tags:
@@ -96,19 +100,19 @@ Resources:
       - IpProtocol: tcp
         FromPort: '0'
         ToPort: '65535'
-        CidrIp: 10.1.3.0/24
+        CidrIp: !GetAtt VPCTemplate.CidrBlock
       - IpProtocol: tcp
         FromPort: '80'
         ToPort: '80'
-        CidrIp: 0.0.0.0/0
+        CidrIp: !FindInMap [ StackConfig, IPAddress, MS ]
       - IpProtocol: tcp
         FromPort: '443'
         ToPort: '443'
-        CidrIp: 0.0.0.0/0
+        CidrIp: !FindInMap [ StackConfig, IPAddress, MS ]
       - IpProtocol: tcp
         FromPort: '22'
         ToPort: '22'
-        CidrIp: 127.0.0.1/32
+        CidrIp: !FindInMap [ StackConfig, IPAddress, MS ]
       Tags:
       - Key: Name
         Value: 'web-servers-sg'
@@ -123,11 +127,12 @@ Resources:
       - IpProtocol: tcp
         FromPort: '3306'
         ToPort: '3306'
-        SourceSecurityGroupId: !Ref WebServerSG
+        CidrIp: !GetAtt VPCTemplate.CidrBlock
+#        SourceSecurityGroupId: !Ref WebServerSG
       - IpProtocol: tcp
         FromPort: '22'
         ToPort: '22'
-        SourceSecurityGroupId: !Ref WebServerSG
+        CidrIp: !FindInMap [ StackConfig, IPAddress, MS ]
       Tags:
       - Key: Name
         Value: 'db-servers-sg'
