@@ -1,5 +1,53 @@
 # Shell
 
+## ユーザ
+---
+### ユーザを作成する
+---
+```
+useradd [-m]    # ホームディレクトリ作成 
+        {ユーザ名}
+```
+
+### パスワードを設定する
+---
+```
+passwd {ユーザ名}
+```
+
+### 鍵作成
+---
+```
+cd /path/to/userhome/.ssh
+
+[ansible@localhost .ssh]$ ssh-keygen -t rsa
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/ansible/.ssh/id_rsa): 
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/ansible/.ssh/id_rsa.
+Your public key has been saved in /home/ansible/.ssh/id_rsa.pub.
+The key fingerprint is:
+SHA256:WP5XOwrqo9xBO8GYXdXk7/q3DTUIy2XXBBHnUfcZvUc ansible@localhost.localdomain
+The key's randomart image is:
++---[RSA 2048]----+
+|            .o=*B|
+|           . ..+E|
+|        . .. o.+=|
+|       O .. = oo.|
+|      + S  o ...+|
+|       . +   . +.|
+|        + o . + .|
+|     . ..+ o . +o|
+|      oo+.  . .o=|
++----[SHA256]-----+
+
+[ansible@localhost .ssh]$ ls -lav
+-rw-------. 1 ansible ansible 1675 Dec 12 16:40 id_rsa
+-rw-r--r--. 1 ansible ansible  411 Dec 12 16:40 id_rsa.pub
+
+```
+
 ## ネットワーク
 ***
 ### DNS
